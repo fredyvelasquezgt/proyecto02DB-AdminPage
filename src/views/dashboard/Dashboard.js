@@ -1,455 +1,989 @@
-import React from 'react'
-
-import {
-  CAvatar,
-  CButton,
-  CButtonGroup,
-  CCard,
-  CCardBody,
-  CCardFooter,
-  CCardHeader,
-  CCol,
-  CProgress,
-  CRow,
-  CTable,
-  CTableBody,
-  CTableDataCell,
-  CTableHead,
-  CTableHeaderCell,
-  CTableRow,
-} from '@coreui/react'
-import { CChartLine } from '@coreui/react-chartjs'
-import { getStyle, hexToRgba } from '@coreui/utils'
-import CIcon from '@coreui/icons-react'
-import {
-  cibCcAmex,
-  cibCcApplePay,
-  cibCcMastercard,
-  cibCcPaypal,
-  cibCcStripe,
-  cibCcVisa,
-  cibGoogle,
-  cibFacebook,
-  cibLinkedin,
-  cifBr,
-  cifEs,
-  cifFr,
-  cifIn,
-  cifPl,
-  cifUs,
-  cibTwitter,
-  cilCloudDownload,
-  cilPeople,
-  cilUser,
-  cilUserFemale,
-} from '@coreui/icons'
-
-import avatar1 from 'src/assets/images/avatars/1.jpg'
-import avatar2 from 'src/assets/images/avatars/2.jpg'
-import avatar3 from 'src/assets/images/avatars/3.jpg'
-import avatar4 from 'src/assets/images/avatars/4.jpg'
-import avatar5 from 'src/assets/images/avatars/5.jpg'
-import avatar6 from 'src/assets/images/avatars/6.jpg'
-
-import WidgetsBrand from '../widgets/WidgetsBrand'
-import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import React, { useState } from 'react'
+import { Button, Dropdown, Form, DropdownButton, Table } from 'react-bootstrap'
+import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
+import { useForm } from '../../hooks/useForm'
+import api from '../../Apis/api'
 
 const Dashboard = () => {
-  const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+  const [value, setValue] = useForm({})
+  const [value1, setValue1] = useForm({})
+  const [value7, setValue7] = useForm({}) //eliminar pelicula
+  const [value2, setValue2] = useForm({}) //modificar usuario
+  const [value6, setValue6] = useForm({}) //dar de baja usuario
+  const [value3, setValue3] = useForm({}) //agregar anunciante
+  const [value4, setValue4] = useForm({}) //modificar anuncio
+  const [value5, setValue5] = useForm({}) //eliminar anunciante
+  const [value8, setValue8] = useForm({}) //Pregunta 2 - reporteria
+  const [value9, setValue9] = useForm({}) //Pregunta 5 - reporteria
 
-  const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
-    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
-    { title: 'Pageviews', value: '78.706 Views', percent: 60, color: 'warning' },
-    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Bounce Rate', value: 'Average Rate', percent: 40.15, color: 'primary' },
-  ]
+  const enviarInfo = async () => {
+    let datos = await api.agregarPelicula.agregar({
+      titulo: value.titulo,
+      descripcion: value.descripcion,
+      actores: value.actores,
+      director: value.director,
+      categoria: value.categoria,
+      premios: value.premios,
+      fechaEstreno: value.fechaEstreno,
+      linkPelicula: value.linkPelicula,
+      duracion: value.duracion,
+      portada: value.portada,
+      idGeneros: value.idGeneros,
+      portada: value.portada,
+    })
+    if (datos.error != '') {
+      alert('Pelicula agregada correctamente')
+    } else {
+      alert('Error al agregar la pelicula')
+    }
+  }
 
-  const progressGroupExample1 = [
-    { title: 'Monday', value1: 34, value2: 78 },
-    { title: 'Tuesday', value1: 56, value2: 94 },
-    { title: 'Wednesday', value1: 12, value2: 67 },
-    { title: 'Thursday', value1: 43, value2: 91 },
-    { title: 'Friday', value1: 22, value2: 73 },
-    { title: 'Saturday', value1: 53, value2: 82 },
-    { title: 'Sunday', value1: 9, value2: 69 },
-  ]
+  const enviarInfo1 = async () => {
+    let datos1 = await api.agregarPelicula.modificar({
+      titulo: value1.titulo1,
+      descripcion: value1.descripcion1,
+      actores: value1.actores1,
+      director: value1.director1,
+      categoria: value1.categoria1,
+      premios: value1.premios1,
+      fechaEstreno: value1.fechaEstreno1,
+      linkPelicula: value1.linkPelicula1,
+      duracion: value1.duracion1,
+      portada: value1.portada1,
+      idGeneros: value1.idGeneros1,
+      portada: value1.portada1,
+    })
+    if (datos1.error != '') {
+      alert('Pelicula modificada correctamente')
+    } else {
+      alert('Error al modificar la pelicula')
+    }
+  }
 
-  const progressGroupExample2 = [
-    { title: 'Male', icon: cilUser, value: 53 },
-    { title: 'Female', icon: cilUserFemale, value: 43 },
-  ]
+  const enviarInfo2 = async () => {
+    let datos2 = await api.usuarios.modificar({
+      nombre: value2.nombre2,
+      correo: value2.correo2,
+    })
+    if (datos2.error != '') {
+      alert('Usuario modificado correctamente')
+    } else {
+      alert('El usuario no se pudo modificar')
+    }
+  }
 
-  const progressGroupExample3 = [
-    { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
-    { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
-    { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
-    { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
-  ]
+  const enviarInfo3 = async () => {
+    let datos3 = await api.anunciate.agregar({
+      titulo: value3.titulo3,
+      link: value3.link3,
+    })
+    if (datos3.error != '') {
+      alert('Anunciante agregado correctamente')
+    } else {
+      alert('No se pudo agregar al anunciante')
+    }
+  }
 
-  const tableExample = [
-    {
-      avatar: { src: avatar1, status: 'success' },
-      user: {
-        name: 'Yiorgos Avraamu',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'USA', flag: cifUs },
-      usage: {
-        value: 50,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
-      },
-      payment: { name: 'Mastercard', icon: cibCcMastercard },
-      activity: '10 sec ago',
-    },
-    {
-      avatar: { src: avatar2, status: 'danger' },
-      user: {
-        name: 'Avram Tarasios',
-        new: false,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Brazil', flag: cifBr },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'info',
-      },
-      payment: { name: 'Visa', icon: cibCcVisa },
-      activity: '5 minutes ago',
-    },
-    {
-      avatar: { src: avatar3, status: 'warning' },
-      user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'India', flag: cifIn },
-      usage: {
-        value: 74,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'warning',
-      },
-      payment: { name: 'Stripe', icon: cibCcStripe },
-      activity: '1 hour ago',
-    },
-    {
-      avatar: { src: avatar4, status: 'secondary' },
-      user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2021' },
-      country: { name: 'France', flag: cifFr },
-      usage: {
-        value: 98,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'danger',
-      },
-      payment: { name: 'PayPal', icon: cibCcPaypal },
-      activity: 'Last month',
-    },
-    {
-      avatar: { src: avatar5, status: 'success' },
-      user: {
-        name: 'Agapetus Tadeáš',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Spain', flag: cifEs },
-      usage: {
-        value: 22,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'primary',
-      },
-      payment: { name: 'Google Wallet', icon: cibCcApplePay },
-      activity: 'Last week',
-    },
-    {
-      avatar: { src: avatar6, status: 'danger' },
-      user: {
-        name: 'Friderik Dávid',
-        new: true,
-        registered: 'Jan 1, 2021',
-      },
-      country: { name: 'Poland', flag: cifPl },
-      usage: {
-        value: 43,
-        period: 'Jun 11, 2021 - Jul 10, 2021',
-        color: 'success',
-      },
-      payment: { name: 'Amex', icon: cibCcAmex },
-      activity: 'Last week',
-    },
-  ]
+  const enviarInfo4 = async () => {
+    let datos4 = await api.anunciate.modificar({
+      titulo: value4.titulo4,
+      link: value4.link4,
+    })
+    if (datos4.error != '') {
+      alert('Anuncio modificado correctamente')
+    } else {
+      alert('El anuncio no se pudo modificar')
+    }
+  }
+
+  const enviarInfo5 = async () => {
+    //eliminar anunciante
+    let datos5 = await api.anunciate.eliminar({
+      idAnuncio: value5.anuncio,
+    })
+    if (datos5.error != '') {
+      alert('Anuncio eliminado correctamente')
+    } else {
+      alert('El anuncio no se pudo eliminar')
+    }
+  }
+
+  const enviarInfo6 = async () => {
+    //dar de baja usuario
+    let datos6 = await api.usuarios.darDeBaja({
+      idUsuario: value6.usuario6,
+    })
+    if (datos6.error != '') {
+      alert('Usuario eliminado correctamente')
+    } else {
+      alert('El usuario no se elimino correctamente')
+    }
+  }
+
+  const enviarInfo7 = async () => {
+    //dar de baja usuario
+    let datos7 = await api.agregarPelicula.eliminar({
+      idPelicula: value7.usuario7,
+    })
+    if (datos7.error != '') {
+      alert('Pelicula eliminada correctamente')
+    } else {
+      alert('La pelicula no se elimino correctamente')
+    }
+  }
+
+  //Funciones para los botones
+
+  //Faltaria crear el querie 1
+
+  const [resultado2, setResultado2] = useState([]) //querie 2
+  const mostrarQuerie2 = async () => {
+    let datos7 = await api.reportes.mostrar({
+      querie: `select p.categoria , count(*)  as cuenta_categoria
+      from estadocontenido e
+      inner join pelicula p
+      on p.idpelicula = e.idpelicula 
+      inner join perfil p2
+      on p2.idperfil = e.idperfil
+      inner join usuario u
+      on u.idusuario = p2.idusuario 
+      where e.estado = 1 and u.tipocuenta = '${value8.categoriaReporteria}' and fechainicio 
+      between '${value8.fechaInicio}' and '${value8.fechaFinal}'
+      group by p.categoria; `,
+    })
+    if (datos7.error != '') {
+      setResultado2(datos7.body)
+    } else {
+      alert('La pelicula no se elimino correctamente')
+    }
+  }
+
+  const [resultado3, setResultado3] = useState([]) //querie 3
+  const mostrarQuerie3 = async () => {
+    let datos7 = await api.reportes.mostrar({
+      querie: `select aD.nombre, aD.tipo, iP.idIntegrante, count(iP.idIntegrante)
+      as cantidad_veces_que_aparecen
+      from integrantesPelicula iP 
+      inner join actoresDirectores aD
+      on iP.idIntegrante = aD.idIntegrante
+      where iP.idPelicula in  (
+      select  eC.idPelicula
+      from estadoContenido eC
+      inner join usuario u
+      on eC.idUsuario = u.idUsuario
+      where u.tipoCuenta = 2 or u.tipoCuenta = 3
+      and eC.estado = 2)
+      group by aD.nombre, aD.tipo, iP.idIntegrante
+      order by cantidad_veces_que_aparecen desc limit 10;`,
+    })
+    if (datos7.error != '') {
+      setResultado3(datos7.body)
+    } else {
+      alert('Error')
+    }
+  }
+
+  const [resultado4, setResultado4] = useState([]) //querie 4
+  const mostrarQuerie4 = async () => {
+    let datos7 = await api.reportes.mostrar({
+      querie: `select tipoCuenta, count(tipocuenta) as cuenta_tipoCuenta
+      from usuario  
+      where tipoCUenta = 3 
+      and fechacreacion > '2021-09-25'
+      group by tipocuenta`,
+    })
+    if (datos7.error != '') {
+      setResultado4(datos7.body)
+    } else {
+      alert('Error')
+    }
+  }
+
+  const [resultado5, setResultado5] = useState([]) //querie 4
+  const mostrarQuerie5 = async () => {
+    let datos7 = await api.reportes.mostrar({
+      querie: `select horaConectar, 
+      count(horaConectar) as horas
+      from inicioSesion
+      where horaConectar = '${value9.fechaQuerie5}' 
+      group by horaConectar
+      order by horas desc limit 1`,
+    })
+    if (datos7.error != '') {
+      setResultado5(datos7.body)
+    } else {
+      alert('Error')
+    }
+  }
 
   return (
     <>
-      <WidgetsDropdown />
-      <CCard className="mb-4">
-        <CCardBody>
-          <CRow>
-            <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                Traffic
-              </h4>
-              <div className="small text-medium-emphasis">January - July 2021</div>
-            </CCol>
-            <CCol sm={7} className="d-none d-md-block">
-              <CButton color="primary" className="float-end">
-                <CIcon icon={cilCloudDownload} />
-              </CButton>
-              <CButtonGroup className="float-end me-3">
-                {['Day', 'Month', 'Year'].map((value) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={value}
-                    className="mx-0"
-                    active={value === 'Month'}
-                  >
-                    {value}
-                  </CButton>
-                ))}
-              </CButtonGroup>
-            </CCol>
-          </CRow>
-          <CChartLine
-            style={{ height: '300px', marginTop: '40px' }}
-            data={{
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [
-                {
-                  label: 'My First dataset',
-                  backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                  borderColor: getStyle('--cui-info'),
-                  pointHoverBackgroundColor: getStyle('--cui-info'),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                  fill: true,
-                },
-                {
-                  label: 'My Second dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-success'),
-                  pointHoverBackgroundColor: getStyle('--cui-success'),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                },
-                {
-                  label: 'My Third dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-danger'),
-                  pointHoverBackgroundColor: getStyle('--cui-danger'),
-                  borderWidth: 1,
-                  borderDash: [8, 5],
-                  data: [65, 65, 65, 65, 65, 65, 65],
-                },
-              ],
-            }}
-            options={{
-              maintainAspectRatio: false,
-              plugins: {
-                legend: {
-                  display: false,
-                },
-              },
-              scales: {
-                x: {
-                  grid: {
-                    drawOnChartArea: false,
-                  },
-                },
-                y: {
-                  ticks: {
-                    beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: Math.ceil(250 / 5),
-                    max: 250,
-                  },
-                },
-              },
-              elements: {
-                line: {
-                  tension: 0.4,
-                },
-                point: {
-                  radius: 0,
-                  hitRadius: 10,
-                  hoverRadius: 4,
-                  hoverBorderWidth: 3,
-                },
-              },
-            }}
-          />
-        </CCardBody>
-        <CCardFooter>
-          <CRow xs={{ cols: 1 }} md={{ cols: 5 }} className="text-center">
-            {progressExample.map((item, index) => (
-              <CCol className="mb-sm-2 mb-0" key={index}>
-                <div className="text-medium-emphasis">{item.title}</div>
-                <strong>
-                  {item.value} ({item.percent}%)
-                </strong>
-                <CProgress thin className="mt-2" color={item.color} value={item.percent} />
-              </CCol>
-            ))}
-          </CRow>
-        </CCardFooter>
-      </CCard>
+      <CRow>
+        <CCol xs>
+          <CCard className="mb-4">
+            <CCardHeader>Contenido</CCardHeader>
+            <CCardBody>
+              <CRow>
+                <CCol xs={12} md={6} xl={6}>
+                  <h2>Agregar pelicula</h2>
+                  <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Titulo pelicula</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Titulo"
+                        name="titulo"
+                        onChange={setValue}
+                        value={value.titulo}
+                      />
+                    </Form.Group>
 
-      <WidgetsBrand withCharts />
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Genero</Form.Label>
+                      <DropdownButton
+                        id="dropdown-basic-button"
+                        title="Genero"
+                        name="idGeneros"
+                        onChange={setValue}
+                        value={value.idGeneros}
+                      >
+                        <Dropdown.Item href="#/action-1">1</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">2</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">3</Dropdown.Item>
+                      </DropdownButton>
+                      <h1></h1>
+                      <p>1: Accion 2:Comedia 3: Romance</p>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Descripcion</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Descripcion"
+                        name="descripcion"
+                        onChange={setValue}
+                        value={value.descripcion}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Actores</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Actores"
+                        name="actores"
+                        onChange={setValue}
+                        value={value.actores}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Director</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Director"
+                        name="director"
+                        onChange={setValue}
+                        value={value.director}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Categoria</Form.Label>
+                      <DropdownButton
+                        id="dropdown-basic-button"
+                        title="Categoria"
+                        name="categoria"
+                        onChange={setValue}
+                        value={value.categoria}
+                      >
+                        <Dropdown.Item href="#/action-1">Accion</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">Drama</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Comedia</Dropdown.Item>
+                      </DropdownButton>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Premios</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Premios"
+                        name="premios"
+                        onChange={setValue}
+                        value={value.premios}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Fecha estreno</Form.Label>
+                      <Form.Control
+                        type="date"
+                        placeholder="Premios"
+                        name="fechaEstreno"
+                        onChange={setValue}
+                        value={value.fechaEstreno}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Link pelicula</Form.Label>
+                      <Form.Control
+                        type="link"
+                        placeholder="Link"
+                        name="linkPelicula"
+                        onChange={setValue}
+                        value={value.linkPelicula}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Duracion (mins) </Form.Label>
+                      <Form.Control
+                        type="link"
+                        placeholder="Duracion"
+                        name="duracion"
+                        onChange={setValue}
+                        value={value.duracion}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Foto para la portada </Form.Label>
+                      <h2></h2>
+                      <input
+                        type="link"
+                        placeholder="Link "
+                        name="portada"
+                        onChange={setValue}
+                        value={value.portada}
+                      />
+                    </Form.Group>
+                    <Button variant="primary" type="submit" onChange={enviarInfo}>
+                      Agregar nueva pelicula
+                    </Button>
+                    <h1></h1>
+                    <hr></hr>
+                  </Form>
+                </CCol>
+
+                <br></br>
+
+                <CCol xs={12} md={6} xl={6}>
+                  <h2>Modificar pelicula</h2>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Seleccionar categoria</Form.Label>
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title="Pelicula"
+                      name="pelicula1"
+                      onChange={setValue1}
+                      value={value1.pelicula1}
+                    >
+                      <Dropdown.Item href="#/action-1">Pelicula 1</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Pelicula 2</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">Pelicula 3</Dropdown.Item>
+                    </DropdownButton>
+                  </Form.Group>
+                  <h2></h2>
+                  <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Titulo pelicula</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Titulo"
+                        name="titulo1"
+                        onChange={setValue1}
+                        value={value1.titulo1}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Descripcion</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Descripcion"
+                        name="descripcion1"
+                        onChange={setValue1}
+                        value={value1.descripcion1}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Genero</Form.Label>
+                      <DropdownButton
+                        id="dropdown-basic-button"
+                        title="Genero"
+                        name="idGeneros1"
+                        onChange={setValue1}
+                        value={value1.idGeneros1}
+                      >
+                        <Dropdown.Item href="#/action-1">1</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">2</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">3</Dropdown.Item>
+                      </DropdownButton>
+                      <h1></h1>
+                      <p>1: Accion 2:Comedia 3: Romance</p>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Actores</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Actores"
+                        name="actores1"
+                        onChange={setValue1}
+                        value={value1.actores1}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Director</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Director"
+                        name="director1"
+                        onChange={setValue1}
+                        value={value1.director1}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Categoria</Form.Label>
+                      <DropdownButton
+                        id="dropdown-basic-button"
+                        title="Categoria"
+                        name="categoria1"
+                        onChange={setValue1}
+                        value={value1.categoria1}
+                      >
+                        <Dropdown.Item href="#/action-1">Accion</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">Drama</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Comedia</Dropdown.Item>
+                      </DropdownButton>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Premios</Form.Label>
+                      <Form.Control
+                        type="password"
+                        placeholder="Premios"
+                        name="premios1"
+                        onChange={setValue1}
+                        value={value1.premios1}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Fecha estreno</Form.Label>
+                      <Form.Control
+                        type="date"
+                        placeholder="Premios"
+                        name="fechaEstreno1"
+                        onChange={setValue1}
+                        value={value1.fechaEstreno1}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Link pelicula</Form.Label>
+                      <Form.Control
+                        type="link"
+                        placeholder="Link"
+                        name="linkPelicula1"
+                        onChange={setValue1}
+                        value={value1.linkPelicula1}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Duracion (mins) </Form.Label>
+                      <Form.Control
+                        type="link"
+                        placeholder="Duracion"
+                        name="duracion1"
+                        onChange={setValue1}
+                        value={value1.duracion1}
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Foto para la portada </Form.Label>
+                      <h2></h2>
+                      <input
+                        type="link"
+                        placeholder="Link"
+                        name="portada1"
+                        onChange={setValue1}
+                        value={value1.portada1}
+                      />
+                    </Form.Group>
+
+                    <Button variant="primary" type="submit" onChange={enviarInfo1}>
+                      Modificar
+                    </Button>
+                    <h1></h1>
+                    <hr></hr>
+                  </Form>
+                </CCol>
+
+                <CCol xs={12} md={6} xl={6}>
+                  <h2>Eliminar pelicula</h2>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Eliminar pelicula</Form.Label>
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title="Seleccionar anuncio"
+                      name="usuario7"
+                      onChange={setValue7}
+                      value={value7.usuario7}
+                    >
+                      <Dropdown.Item href="#/action-1">Pelicula 1</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Pelicula 2</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">Pelicula 3</Dropdown.Item>
+                    </DropdownButton>
+                  </Form.Group>
+                  <h2></h2>
+                  <Button variant="primary" type="submit" onChange={enviarInfo7}>
+                    Eliminar
+                  </Button>
+                </CCol>
+              </CRow>
+              <hr></hr>
+
+              <br />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
 
       <CRow>
         <CCol xs>
           <CCard className="mb-4">
-            <CCardHeader>Traffic {' & '} Sales</CCardHeader>
+            <CCardHeader>Usuarios</CCardHeader>
             <CCardBody>
               <CRow>
                 <CCol xs={12} md={6} xl={6}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <div className="text-medium-emphasis small">New Clients</div>
-                        <div className="fs-5 fw-semibold">9,123</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Recurring Clients</div>
-                        <div className="fs-5 fw-semibold">22,643</div>
-                      </div>
-                    </CCol>
-                  </CRow>
+                  <h2>Modificar usuario</h2>
 
-                  <hr className="mt-0" />
-                  {progressGroupExample1.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-prepend">
-                        <span className="text-medium-emphasis small">{item.title}</span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="info" value={item.value1} />
-                        <CProgress thin color="danger" value={item.value2} />
-                      </div>
-                    </div>
-                  ))}
+                  <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Nombre usuario</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Nombre"
+                        name="nombre2"
+                        onChange={setValue2}
+                        value={value2.nombre2}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Correo</Form.Label>
+                      <Form.Control
+                        type="email"
+                        placeholder="Correo"
+                        name="correo2"
+                        onChange={setValue2}
+                        value={value2.correo2}
+                      />
+                    </Form.Group>
+
+                    <Form>
+                      <Form.Check
+                        type="switch"
+                        id="custom-switch"
+                        label="Reiniciar
+                      intentos fallidos"
+                      />
+                    </Form>
+
+                    <h1></h1>
+                    <Button variant="primary" type="submit" onChange={enviarInfo2}>
+                      Modificar
+                    </Button>
+                    <h1></h1>
+                    <hr></hr>
+                  </Form>
                 </CCol>
 
                 <CCol xs={12} md={6} xl={6}>
-                  <CRow>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Pageviews</div>
-                        <div className="fs-5 fw-semibold">78,623</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={6}>
-                      <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
-                        <div className="text-medium-emphasis small">Organic</div>
-                        <div className="fs-5 fw-semibold">49,123</div>
-                      </div>
-                    </CCol>
-                  </CRow>
+                  <h2>Dar de baja usuarios</h2>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Dar de baja usuario</Form.Label>
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title="Seleccionar usuario"
+                      name="usuario6"
+                      onChange={setValue6}
+                      value={value6.usuario6}
+                    >
+                      <Dropdown.Item href="#/action-1">Usuario 1</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Usuario 2</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">Usuario 3 3</Dropdown.Item>
+                    </DropdownButton>
+                  </Form.Group>
+                  <h1> </h1>
 
-                  <hr className="mt-0" />
-
-                  {progressGroupExample2.map((item, index) => (
-                    <div className="progress-group mb-4" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">{item.value}%</span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="warning" value={item.value} />
-                      </div>
-                    </div>
-                  ))}
-
-                  <div className="mb-5"></div>
-
-                  {progressGroupExample3.map((item, index) => (
-                    <div className="progress-group" key={index}>
-                      <div className="progress-group-header">
-                        <CIcon className="me-2" icon={item.icon} size="lg" />
-                        <span>{item.title}</span>
-                        <span className="ms-auto fw-semibold">
-                          {item.value}{' '}
-                          <span className="text-medium-emphasis small">({item.percent}%)</span>
-                        </span>
-                      </div>
-                      <div className="progress-group-bars">
-                        <CProgress thin color="success" value={item.percent} />
-                      </div>
-                    </div>
-                  ))}
+                  <Button variant="primary" type="submit" onChange={enviarInfo6}>
+                    Dar de baja
+                  </Button>
+                  <hr></hr>
                 </CCol>
               </CRow>
 
               <br />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
 
-              <CTable align="middle" className="mb-0 border" hover responsive>
-                <CTableHead color="light">
-                  <CTableRow>
-                    <CTableHeaderCell className="text-center">
-                      <CIcon icon={cilPeople} />
-                    </CTableHeaderCell>
-                    <CTableHeaderCell>User</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Country</CTableHeaderCell>
-                    <CTableHeaderCell>Usage</CTableHeaderCell>
-                    <CTableHeaderCell className="text-center">Payment Method</CTableHeaderCell>
-                    <CTableHeaderCell>Activity</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  {tableExample.map((item, index) => (
-                    <CTableRow v-for="item in tableItems" key={index}>
-                      <CTableDataCell className="text-center">
-                        <CAvatar size="md" src={item.avatar.src} status={item.avatar.status} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div>{item.user.name}</div>
-                        <div className="small text-medium-emphasis">
-                          <span>{item.user.new ? 'New' : 'Recurring'}</span> | Registered:{' '}
-                          {item.user.registered}
+      <CRow>
+        <CCol xs>
+          <CCard className="mb-4">
+            <CCardHeader>Anunciantes</CCardHeader>
+            <CCardBody>
+              <CRow>
+                <CCol xs={12} md={6} xl={6}>
+                  <h2>Agregar anunciante</h2>
+                  <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Nombre anunciante</Form.Label>
+                      <Form.Control
+                        placeholder="Nombre"
+                        name="titulo3"
+                        onChange={setValue3}
+                        value={value3.titulo3}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Link del anuncio</Form.Label>
+                      <Form.Control
+                        placeholder="Link"
+                        name="link3"
+                        onChange={setValue3}
+                        value={value3.link3}
+                      />
+                    </Form.Group>
+
+                    <Button variant="primary" type="submit" onChange={enviarInfo3}>
+                      Agregar
+                    </Button>
+                    <h1></h1>
+                    <hr></hr>
+                  </Form>
+                </CCol>
+
+                <CCol xs={12} md={6} xl={6}>
+                  <h2>Modificar anunciante</h2>
+                  <Form>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Nombre anuncio</Form.Label>
+                      <DropdownButton
+                        id="dropdown-basic-button"
+                        title="Seleccionar anuncio"
+                        name="categoria1"
+                        onChange={setValue4}
+                        value={value4.categoria}
+                      >
+                        <Dropdown.Item href="#/action-1">Anunciante 1</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">Anunciante 2</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Anunciante 3</Dropdown.Item>
+                      </DropdownButton>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Nombre anuncio</Form.Label>
+                      <Form.Control type="email" placeholder="Nombre" />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                      <Form.Label>Link del anuncio</Form.Label>
+                      <Form.Control type="email" placeholder="Link" />
+                    </Form.Group>
+
+                    <Button variant="primary" type="submit" onChange={enviarInfo4}>
+                      Modificar
+                    </Button>
+                    <h1></h1>
+                    <hr></hr>
+                  </Form>
+                </CCol>
+
+                <CCol xs={12} md={6} xl={6}>
+                  <h2>Eliminar anunciante</h2>
+                  <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Seleccionar anunciante</Form.Label>
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title="Anunciante"
+                      name="anuncio"
+                      onChange={setValue5}
+                      value={value5.anuncio}
+                    >
+                      <Dropdown.Item href="#/action-1">Anunciante 1</Dropdown.Item>
+                      <Dropdown.Item href="#/action-2">Anunciante 2</Dropdown.Item>
+                      <Dropdown.Item href="#/action-3">Anunciante 3</Dropdown.Item>
+                    </DropdownButton>
+                  </Form.Group>
+                  <h2></h2>
+                  <Button variant="primary" type="submit" onChange={enviarInfo5}>
+                    Eliminar
+                  </Button>
+                </CCol>
+              </CRow>
+              <hr></hr>
+
+              <br />
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+
+      <CRow>
+        <CCol xs>
+          <CCard className="mb-4">
+            <CCardHeader>Reporteria</CCardHeader>
+            <CCardBody>
+              <CRow>
+                <CCol xs={12} md={6} xl={6}>
+                  <CRow>
+                    <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                      <div className="text-medium-emphasis small">Pregunta 2</div>
+                      <div className=" fw-semibold">
+                        Cantidad de reproducciones por cada categoría, por tipo de cuenta para un
+                        rango de fechas dado.
+                      </div>
+                    </div>
+                  </CRow>
+
+                  <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Categorias</Form.Label>
+                    <DropdownButton
+                      id="dropdown-basic-button"
+                      title="Categorias"
+                      name="categoriaReporteria"
+                      onSelect={setValue8.categoriaReporteria}
+                    >
+                      <Dropdown.Item>Basico</Dropdown.Item>
+                      <Dropdown.Item>Estandar</Dropdown.Item>
+                      <Dropdown.Item>Avanzado</Dropdown.Item>
+                    </DropdownButton>
+
+                    <h1></h1>
+                  </Form.Group>
+
+                  <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Fecha inicio</Form.Label>
+                    <Form.Control
+                      type="date"
+                      placeholder="Fecha"
+                      name="fechaInicio"
+                      onChange={setValue8}
+                      value={value8.fechaInicio}
+                    />
+                    <h1></h1>
+                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                      <Form.Label>Fecha final</Form.Label>
+                      <Form.Control
+                        type="date"
+                        placeholder="Fecha"
+                        name="fechaFinal"
+                        onChange={setValue8}
+                        value={value8.fechaFinal}
+                      />
+                    </Form.Group>
+                  </Form.Group>
+                  <div className="mb-5">
+                    <button type="button" className="btn btn-primary" onClick={mostrarQuerie2}>
+                      {' '}
+                      Mostrar{' '}
+                    </button>
+                    <h1></h1>
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>Categoria</th>
+                          <th>Veces que aparece</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {resultado2.map((item) => (
+                          <tr key={item.categoria}>
+                            <td>{item.categoria}</td>
+                            <td>{item.cuenta_categoria}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </div>
+                </CCol>
+
+                <CCol xs={12} md={6} xl={6}>
+                  <CRow>
+                    <CCol sm={6}>
+                      <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                        <div className="text-medium-emphasis small">Pregunta 1</div>
+                        <div className=" fw-semibold">
+                          El top 10 de géneros de contenido más visto, y los minutos consumidos para
+                          un rango de fechas dado
                         </div>
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.country.flag} title={item.country.name} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="clearfix">
-                          <div className="float-start">
-                            <strong>{item.usage.value}%</strong>
-                          </div>
-                          <div className="float-end">
-                            <small className="text-medium-emphasis">{item.usage.period}</small>
-                          </div>
-                        </div>
-                        <CProgress thin color={item.usage.color} value={item.usage.value} />
-                      </CTableDataCell>
-                      <CTableDataCell className="text-center">
-                        <CIcon size="xl" icon={item.payment.icon} />
-                      </CTableDataCell>
-                      <CTableDataCell>
-                        <div className="small text-medium-emphasis">Last login</div>
-                        <strong>{item.activity}</strong>
-                      </CTableDataCell>
-                    </CTableRow>
-                  ))}
-                </CTableBody>
-              </CTable>
+                      </div>
+                    </CCol>
+                  </CRow>
+
+                  <div className="mb-5">
+                    <button type="button" className="btn btn-primary">
+                      {' '}
+                      Mostrar{' '}
+                    </button>
+                    <h1></h1>
+
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>id Genero</th>
+                          <th>Genero</th>
+                          <th>Vistas por genero</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                </CCol>
+
+                <CCol xs={12} md={6} xl={6}>
+                  <CRow>
+                    <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                      <div className="text-medium-emphasis small">Pregunta 3</div>
+                      <div className=" fw-semibold">
+                        El top 10 de los directores y actores principales de las películas que los
+                        perfiles estándar y avanzados han visto.
+                      </div>
+                    </div>
+                  </CRow>
+                  <div className="mb-5">
+                    <button type="button" className="btn btn-primary" onClick={mostrarQuerie3}>
+                      {' '}
+                      Mostrar{' '}
+                    </button>
+                    <h1></h1>
+
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Tipo</th>
+                          <th>id Integrante</th>
+                          <th>Cantidad de veces que aparece</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tbody>
+                          {resultado3.map((item) => (
+                            <tr key={item.nombre}>
+                              <td>{item.nombre}</td>
+                              <td>{item.tipo}</td>
+                              <td>{item.idIntegrante}</td>
+                              <td>{item.cantidad_veces_que_aparecen}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </tbody>
+                    </Table>
+                  </div>
+                </CCol>
+
+                <CCol xs={12} md={6} xl={6}>
+                  <CRow>
+                    <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                      <div className="text-medium-emphasis small">Pregunta 4</div>
+                      <div className=" fw-semibold">
+                        La cantidad de cuentas avanzadas se han creado en los últimos 6 meses.
+                      </div>
+                    </div>
+                  </CRow>
+                  <div className="mb-5">
+                    <button type="button" className="btn btn-primary" onClick={mostrarQuerie4}>
+                      {' '}
+                      Mostrar{' '}
+                    </button>
+                    <h1></h1>
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>id Cuenta</th>
+                          <th>Cantidad del tipo de cuenta</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {resultado4.map((item) => (
+                            <tr key={item.nombre}>
+                              <td>{item.tipoCuenta}</td>
+                              <td>{item.cuenta_tiempoCuenta}</td>
+                            </tr>
+                          ))}
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                </CCol>
+
+                <CCol xs={12} md={6} xl={6}>
+                  <CRow>
+                    <div className="border-start border-start-4 border-start-success py-1 px-3 mb-3">
+                      <div className="text-medium-emphasis small">Pregunta 5</div>
+                      <div className=" fw-semibold">
+                        Para una fecha específica, ¿cuál es la hora pico donde el servicio es más
+                        utilizado?{' '}
+                      </div>
+                    </div>
+                  </CRow>
+                  <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Fecha</Form.Label>
+                    <Form.Control
+                      type="date"
+                      placeholder="Fecha"
+                      name="fechaQuerie5"
+                      onChange={setValue9}
+                      value={value9.fechaQuerie5}
+                    />
+                  </Form.Group>
+                  <div className="mb-5">
+                    <button type="button" className="btn btn-primary" onClick={mostrarQuerie5}>
+                      {' '}
+                      Mostrar{' '}
+                    </button>
+                    <h1></h1>
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>Hora</th>
+                          <th>Cantidad de conexiones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <tr>
+                            {resultado5.map((item) => (
+                              <tr key={item.nombre}>
+                                <td>{item.horaConectar}</td>
+                                <td>{item.horas}</td>
+                              </tr>
+                            ))}
+                          </tr>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </div>
+                </CCol>
+              </CRow>
+
+              <br />
             </CCardBody>
           </CCard>
         </CCol>
